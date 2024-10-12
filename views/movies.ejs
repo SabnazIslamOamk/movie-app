@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie App</title>
+    <link rel="stylesheet" href="/styles.css"> <!-- Link to external CSS -->
+</head>
+<body>
+    <h1>Movie App</h1>
+    
+    <!-- Buttons for different genres -->
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; margin-bottom: 20px;">
+        <button id="popular-btn">Most Popular</button>
+        <button id="recent-btn">Most Recent</button>
+        <button id="action-btn">Action</button>
+        <button id="comedy-btn">Comedy</button>
+        <button id="spanish-btn">Spanish Movies</button>
+    </div>
+
+    <!-- Initially hidden title for movies section -->
+    <h2 id="movies-title"></h2> 
+
+    <!-- Container to display movies -->
+    <div id="movies-container"></div>
+
+    <script>
+        const moviesData = {
+            popular: <%- JSON.stringify(popularMovies) %>,
+            recent: <%- JSON.stringify(recentMovies) %>,
+            action: <%- JSON.stringify(actionMovies) %>,
+            comedy: <%- JSON.stringify(comedyMovies) %>,
+            spanish: <%- JSON.stringify(spanishMovies) %>,
+        };
+
+        // Function to display movies based on selected genre
+        function displayMovies(movies, genre) {
+            const container = document.getElementById('movies-container');
+            const title = document.getElementById('movies-title');
+            container.innerHTML = ''; // Clear previous movies
+            
+            // Update title and make it visible
+            title.textContent = genre ? genre + " Movies" : ""; // Keep empty if no genre
+            title.style.display = genre ? 'block' : 'none'; // Show only when genre is set
+
+            movies.forEach(movie => {
+                const movieElement = document.createElement('div');
+                movieElement.classList.add('movie');
+                movieElement.innerHTML = `
+                    <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+                    <h3>${movie.title}</h3>
+                    <p>Release Date: ${movie.release_date}</p>
+                    <p>Overview: ${movie.overview}</p>
+                `;
+                container.appendChild(movieElement);
+            });
+        }
+
+        // Event listeners for buttons
+        document.getElementById('popular-btn').addEventListener('click', () => displayMovies(moviesData.popular, "Most Popular"));
+        document.getElementById('recent-btn').addEventListener('click', () => displayMovies(moviesData.recent, "Most Recent")); 
+        document.getElementById('action-btn').addEventListener('click', () => displayMovies(moviesData.action, "Action"));
+        document.getElementById('comedy-btn').addEventListener('click', () => displayMovies(moviesData.comedy, "Comedy"));
+        document.getElementById('spanish-btn').addEventListener('click', () => displayMovies(moviesData.spanish, "Spanish"));
+    </script>
+</body>
+</html>
